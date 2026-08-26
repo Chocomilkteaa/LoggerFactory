@@ -1,20 +1,17 @@
 import type pino from "pino";
 import { type CreateLoggerTransportOptions, createLoggerTransport } from "./createLoggerTransport.ts";
 import type ThreadStream from "thread-stream";
+import type { CreateLoggerConfigOptions, CreateLoggerConfigReturn } from "../createLogger.type.ts";
 
-interface CreateLoggerConfigOptions {
-    minLogLevel?: pino.LevelWithSilent;
-    redactPaths?: string[];
-    name?: string;
+interface CreateNodeLoggerConfigOptions extends CreateLoggerConfigOptions {
     transportOptions?: CreateLoggerTransportOptions;
 }
 
-interface CreateLoggerConfigReturn {
-    options: pino.LoggerOptions;
+interface CreateNodeLoggerConfigReturn extends CreateLoggerConfigReturn {
     stream?: ThreadStream;
 }
 
-function createLoggerConfig(options: CreateLoggerConfigOptions): CreateLoggerConfigReturn {
+function createNodeLoggerConfig(options: CreateNodeLoggerConfigOptions): CreateNodeLoggerConfigReturn {
     const stream = createLoggerTransport(options.transportOptions);
 
     const pinoOptions: pino.LoggerOptions = {
@@ -36,5 +33,6 @@ function createLoggerConfig(options: CreateLoggerConfigOptions): CreateLoggerCon
     };
 }
 
-export { createLoggerConfig };
-export type { CreateLoggerConfigOptions, CreateLoggerConfigReturn };
+
+export { createNodeLoggerConfig };
+export type { CreateNodeLoggerConfigOptions, CreateNodeLoggerConfigReturn };

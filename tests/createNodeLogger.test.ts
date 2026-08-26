@@ -1,11 +1,11 @@
 import { afterEach, describe, expect, it } from "vitest";
 
-import { createLogger, type CreateLoggerReturn } from "../src/createLogger.ts";
+import { createNodeLogger, type CreateNodeLoggerReturn } from "../src/node/createLogger.ts";
 import { mkdtemp, readFile, rm } from "fs/promises";
 import { tmpdir } from "os";
 import { join } from "path";
 
-const loggers: CreateLoggerReturn[] = [];
+const loggers: CreateNodeLoggerReturn[] = [];
 
 async function parseLog(filePath: string): Promise<any[]> {
     const content = await readFile(filePath, "utf-8");
@@ -17,9 +17,7 @@ async function parseLog(filePath: string): Promise<any[]> {
     return entries;
 }
 
-describe("createLogger", () => {
-
-
+describe("createNodeLogger", () => {
     afterEach(async () => {
         await Promise.all(loggers.map((logger) => logger.close()));
         loggers.length = 0;
@@ -27,7 +25,7 @@ describe("createLogger", () => {
 
     describe("configuration", () => {
         it("should create a logger with name", () => {
-            const logger = createLogger({ name: "test-logger" });
+            const logger = createNodeLogger({ name: "test-logger" });
             loggers.push(logger);
 
             expect(logger.instance).toBeDefined();
@@ -35,7 +33,7 @@ describe("createLogger", () => {
         });
 
         it("should create a logger with minimum log level", () => {
-            const logger = createLogger({ minLogLevel: "warn" });
+            const logger = createNodeLogger({ minLogLevel: "warn" });
             loggers.push(logger);
 
             expect(logger.instance).toBeDefined();
@@ -43,7 +41,7 @@ describe("createLogger", () => {
         });
 
         it("should create a logger with minimum log level being \"debug\" when not specified", () => {
-            const logger = createLogger({});
+            const logger = createNodeLogger({});
             loggers.push(logger);
 
             expect(logger.instance).toBeDefined();
@@ -68,7 +66,7 @@ describe("createLogger", () => {
 
         it("should create a logger with redaction paths", async () => {
             const destination = await createDestinationFilePath();
-            const logger = createLogger({
+            const logger = createNodeLogger({
                 redactPaths: ["password", "token", "nested.key"], transportOptions: {
                     targets: [{
                         type: "file", options: {
@@ -94,7 +92,7 @@ describe("createLogger", () => {
 
         it("should filter output logs based on minimum log level", async () => {
             const destination = await createDestinationFilePath();
-            const logger = createLogger({
+            const logger = createNodeLogger({
                 minLogLevel: "warn",
                 transportOptions: {
                     targets: [{
@@ -124,7 +122,7 @@ describe("createLogger", () => {
             const destination1 = await createDestinationFilePath();
             const destination2 = await createDestinationFilePath();
 
-            const logger = createLogger({
+            const logger = createNodeLogger({
                 transportOptions: {
                     targets: [
                         {
@@ -166,7 +164,7 @@ describe("createLogger", () => {
             const destination1 = await createDestinationFilePath();
             const destination2 = await createDestinationFilePath();
 
-            const logger = createLogger({
+            const logger = createNodeLogger({
                 transportOptions: {
                     targets: [
                         {
@@ -209,7 +207,7 @@ describe("createLogger", () => {
         it("should deduplicate logs when deduplicateLogs is set to true", async () => {
             const destination1 = await createDestinationFilePath();
             const destination2 = await createDestinationFilePath();
-            const logger = createLogger({
+            const logger = createNodeLogger({
                 transportOptions: {
                     targets: [
                         {
