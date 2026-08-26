@@ -3,5 +3,5 @@
     "compilerOptions": {
         "rootDir": ".",
     },
-    "include": ["src/**/*.ts", "eslint.config.ts", "prettier.config.ts"],
+    "include": ["src/**/*.ts", "eslint.config.ts", "prettier.config.ts", "vitest.config.ts", "tests/**/*.ts"],
 }
