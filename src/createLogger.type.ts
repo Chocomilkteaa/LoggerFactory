@@ -1,7 +1,5 @@
 import type pino from "pino";
 
-type AppLogger = pino.Logger;
-
 interface CreateLoggerConfigOptions {
     minLogLevel?: pino.LevelWithSilent;
     name?: string;
@@ -12,4 +10,4 @@ interface CreateLoggerConfigReturn {
     options: pino.LoggerOptions;
 }
 
-export type { AppLogger, CreateLoggerConfigOptions, CreateLoggerConfigReturn };
+export type { CreateLoggerConfigOptions, CreateLoggerConfigReturn };

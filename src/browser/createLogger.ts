@@ -1,8 +1,8 @@
 import pino from "pino";
 
-import type { AppLogger } from "../createLogger.type.ts";
-
 import { createBrowserLoggerConfig, type CreateBrowserLoggerConfigOptions } from "./createLoggerConfig.ts";
+
+type AppLogger = pino.Logger;
 
 type CreateBrowserLoggerOptions = CreateBrowserLoggerConfigOptions;
 type CreateBrowserLoggerReturn = AppLogger;
@@ -15,4 +15,4 @@ function createBrowserLogger({name, ...options}: CreateBrowserLoggerOptions): Cr
 }
 
 export { createBrowserLogger };
-export type { CreateBrowserLoggerOptions, CreateBrowserLoggerReturn };
+export type { AppLogger, CreateBrowserLoggerOptions, CreateBrowserLoggerReturn };

@@ -1,10 +1,10 @@
 import pino from "pino";
 
-import type { AppLogger } from "../createLogger.type.ts";
-
 import { createLoggerCloseHandler } from "./createLoggerCloseHandler.ts";
 import { createNodeLoggerConfig, type CreateNodeLoggerConfigOptions } from "./createLoggerConfig.ts";
 import { createLoggerFlushHandler } from "./createLoggerFlushHandler.ts";
+
+type AppLogger = pino.Logger;
 
 type CreateNodeLoggerOptions = CreateNodeLoggerConfigOptions;
 
@@ -30,4 +30,4 @@ function createNodeLogger(options: CreateNodeLoggerOptions): CreateNodeLoggerRet
 }
 
 export { createNodeLogger };
-export type { CreateNodeLoggerOptions, CreateNodeLoggerReturn };
+export type { AppLogger, CreateNodeLoggerOptions, CreateNodeLoggerReturn };
