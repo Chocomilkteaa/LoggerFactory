@@ -11,5 +11,9 @@
                 "github.vscode-pull-request-github"
             ]
         }
-    }
+    },
+    "runArgs": [
+        "--env-file", "${localWorkspaceFolder}/.env"
+    ],
+    "postStartCommand": "bash ./setup.sh"
 }
