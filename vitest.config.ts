@@ -8,8 +8,16 @@ const config = defineConfig({
         extends: true,
         test: {
           environment: "node",
-          include: ["tests/*.node.test.ts"],
-          name: "node",
+          include: ["tests/*.node.unit.test.ts"],
+          name: "node:unit",
+        }
+      },
+      {
+        extends: true,
+        test: {
+          environment: "node",
+          include: ["tests/*.node.integration.test.ts"],
+          name: "node:integration",
         }
       },
       {
