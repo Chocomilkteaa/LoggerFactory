@@ -16,7 +16,6 @@ function createNodeLoggerConfig(options: CreateNodeLoggerConfigOptions): CreateN
 
     const pinoOptions: pino.LoggerOptions = {
         level: options.minLogLevel ?? "info",
-        redact: options.redactPaths,
         name: options.name,
     };
 
