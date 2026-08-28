@@ -4,12 +4,12 @@ type AppLogger = pino.Logger;
 
 interface CreateLoggerConfigOptions {
     minLogLevel?: pino.LevelWithSilent;
-    redactPaths?: string[];
     name?: string;
+    redactPaths?: string[];
 }
 
 interface CreateLoggerConfigReturn {
     options: pino.LoggerOptions;
 }
 
-export type { CreateLoggerConfigOptions, CreateLoggerConfigReturn, AppLogger };
+export type { AppLogger, CreateLoggerConfigOptions, CreateLoggerConfigReturn };

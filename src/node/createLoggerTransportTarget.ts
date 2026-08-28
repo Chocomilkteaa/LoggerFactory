@@ -26,25 +26,28 @@ type LoggerTransportTarget =
 
 const STDOUT_FILE_DESCRIPTOR = 1;
 
+function assertNever(value: never): never {
+    throw new Error(`Unexpected logger transport: ${JSON.stringify(value)}`);
+}
+
 function createLoggerTransportTarget(
     target: LoggerTransportTarget
 ): pino.TransportTargetOptions {
     switch (target.type) {
         case "file":
             return {
-                target: "pino/file",
+                level: target.levelOverride,
                 options: {
                     append: target.options.append,
+                    colorize: false,
                     destination: target.options.destination,
                     mkdir: target.options.mkdir,
                     sync: target.options.sync ?? false,
-                    colorize: false,
                 },
-                level: target.levelOverride,
+                target: "pino/file",
             };
         case "pretty":
             return {
-                target: "pino-pretty",
                 options: {
                     colorize: true,
                     destination: STDOUT_FILE_DESCRIPTOR,
@@ -52,24 +55,21 @@ function createLoggerTransportTarget(
                     sync: target.sync,
                     translateTime: "SYS:standard",
                 },
+                target: "pino-pretty",
             };
         case "stdout":
             return {
-                target: "pino/file",
+                level: target.levelOverride,
                 options: {
+                    colorize: true,
                     destination: STDOUT_FILE_DESCRIPTOR,
                     sync: target.sync ?? false,
-                    colorize: true,
                 },
-                level: target.levelOverride,
+                target: "pino/file",
             };
         default:
             return assertNever(target);
     }
-}
-
-function assertNever(value: never): never {
-    throw new Error(`Unexpected logger transport: ${JSON.stringify(value)}`);
 }
 
 export { createLoggerTransportTarget };

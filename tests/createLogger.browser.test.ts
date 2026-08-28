@@ -1,4 +1,4 @@
-import { describe, it, expect, vi, afterEach, beforeEach } from 'vitest'
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import { cdp, type CDPSession } from "vitest/browser";
 
 import { createBrowserLogger } from '../src/browser/createLogger.ts'
@@ -28,8 +28,8 @@ describe('createBrowserLogger', () => {
         }[] = [];
 
         const logHandler = (payload: {
+            args: { description?: string; objectId?: string; value?: unknown; }[];
             type: string;
-            args: { value?: unknown; objectId?: string; description?: string }[];
         }): void => {
             void (async () => {
                 const values = await Promise.all(
@@ -103,7 +103,7 @@ describe('createBrowserLogger', () => {
 
         it("should redact sensitive fields in the log", async () => {
             const logger = createBrowserLogger({ redactPaths: ["password", "token", "nested.key"] });
-            logger.info({ password: "secret", token: "abc123", nested: { key: "value" }, message: "Test log entry" });
+            logger.info({ message: "Test log entry", nested: { key: "value" }, password: "secret", token: "abc123" });
 
             await expect.poll(() => logs.length).toBeGreaterThan(0);
 
@@ -111,10 +111,10 @@ describe('createBrowserLogger', () => {
 
             expect(log.type).toBe("info");
             expect(JSON.parse(log.values[0] as string)).toMatchObject({
-                password: "[REDACTED]",
-                token: "[REDACTED]",
+                message: "Test log entry",
                 nested: { key: "[REDACTED]" },
-                message: "Test log entry"
+                password: "[REDACTED]",
+                token: "[REDACTED]"
             });
         });
     });

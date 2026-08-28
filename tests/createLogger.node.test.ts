@@ -1,9 +1,9 @@
-import { afterEach, describe, expect, it } from "vitest";
-
-import { createNodeLogger, type CreateNodeLoggerReturn } from "../src/node/createLogger.ts";
 import { mkdtemp, readFile, rm } from "fs/promises";
 import { tmpdir } from "os";
 import { join } from "path";
+import { afterEach, describe, expect, it } from "vitest";
+
+import { createNodeLogger, type CreateNodeLoggerReturn } from "../src/node/createLogger.ts";
 
 const loggers: CreateNodeLoggerReturn[] = [];
 
@@ -60,7 +60,7 @@ describe("createNodeLogger", () => {
         }
 
         afterEach(async () => {
-            await Promise.all(temporaryDirectories.map((dir) => rm(dir, { recursive: true, force: true })));
+            await Promise.all(temporaryDirectories.map((dir) => rm(dir, { force: true, recursive: true })));
             temporaryDirectories.length = 0;
         });
 
@@ -69,12 +69,12 @@ describe("createNodeLogger", () => {
             const logger = createNodeLogger({
                 redactPaths: ["password", "token", "nested.key"], transportOptions: {
                     targets: [{
-                        type: "file", options: {
+                        options: {
+                            append: true,
                             destination: destination,
                             mkdir: true,
-                            append: true,
                             sync: true,
-                        }
+                        }, type: "file"
                     }]
                 },
             });
@@ -82,12 +82,12 @@ describe("createNodeLogger", () => {
 
             expect(logger.instance).toBeDefined();
 
-            logger.instance.info({ password: "secret", token: "abc123", nested: { key: "value" }, message: "Test log entry" });
+            logger.instance.info({ message: "Test log entry", nested: { key: "value" }, password: "secret", token: "abc123" });
             await logger.flush();
 
             const entries = await parseLog(destination);
             expect(entries).toHaveLength(1);
-            expect(entries[0]).toMatchObject({ password: "[REDACTED]", token: "[REDACTED]", nested: { key: "[REDACTED]" }, message: "Test log entry" });
+            expect(entries[0]).toMatchObject({ message: "Test log entry", nested: { key: "[REDACTED]" }, password: "[REDACTED]", token: "[REDACTED]" });
         });
 
         it("should filter output logs based on minimum log level", async () => {
@@ -96,12 +96,12 @@ describe("createNodeLogger", () => {
                 minLogLevel: "warn",
                 transportOptions: {
                     targets: [{
-                        type: "file", options: {
+                        options: {
+                            append: true,
                             destination: destination,
                             mkdir: true,
-                            append: true,
                             sync: true,
-                        }
+                        }, type: "file"
                     }]
                 },
             });
@@ -126,20 +126,20 @@ describe("createNodeLogger", () => {
                 transportOptions: {
                     targets: [
                         {
-                            type: "file", options: {
+                            options: {
+                                append: true,
                                 destination: destination1,
                                 mkdir: true,
-                                append: true,
                                 sync: true,
-                            }
+                            }, type: "file"
                         },
                         {
-                            type: "file", options: {
+                            options: {
+                                append: true,
                                 destination: destination2,
                                 mkdir: true,
-                                append: true,
                                 sync: true,
-                            }
+                            }, type: "file"
                         }
                     ]
                 },
@@ -168,20 +168,20 @@ describe("createNodeLogger", () => {
                 transportOptions: {
                     targets: [
                         {
-                            levelOverride: "error", type: "file", options: {
+                            levelOverride: "error", options: {
+                                append: true,
                                 destination: destination1,
                                 mkdir: true,
-                                append: true,
                                 sync: true,
-                            }
+                            }, type: "file"
                         },
                         {
-                            levelOverride: "info", type: "file", options: {
+                            levelOverride: "info", options: {
+                                append: true,
                                 destination: destination2,
                                 mkdir: true,
-                                append: true,
                                 sync: true,
-                            }
+                            }, type: "file"
                         }
                     ]
                 },
@@ -209,25 +209,25 @@ describe("createNodeLogger", () => {
             const destination2 = await createDestinationFilePath();
             const logger = createNodeLogger({
                 transportOptions: {
+                    deduplicateLogs: true,
                     targets: [
                         {
-                            levelOverride: "warn", type: "file", options: {
+                            levelOverride: "warn", options: {
+                                append: true,
                                 destination: destination1,
                                 mkdir: true,
-                                append: true,
                                 sync: true,
-                            }
+                            }, type: "file"
                         },
                         {
-                            type: "file", options: {
+                            options: {
+                                append: true,
                                 destination: destination2,
                                 mkdir: true,
-                                append: true,
                                 sync: true,
-                            }
+                            }, type: "file"
                         }
                     ],
-                    deduplicateLogs: true,
                 },
             });
             loggers.push(logger);

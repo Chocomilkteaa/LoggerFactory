@@ -50,7 +50,7 @@ async function closeStream(stream: ThreadStream): Promise<void> {
 function createLoggerCloseHandler(
     stream: ThreadStream | undefined,
 ): () => Promise<void> {
-    let closePromise: Promise<void> | null = null;
+    let closePromise: null | Promise<void> = null;
 
     return async (): Promise<void> => {
         if (stream == null) return Promise.resolve();

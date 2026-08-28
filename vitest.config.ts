@@ -1,5 +1,5 @@
-import { defineConfig } from "vitest/config";
 import { playwright } from '@vitest/browser-playwright'
+import { defineConfig } from "vitest/config";
 
 const config = defineConfig({
   test: {
@@ -7,26 +7,26 @@ const config = defineConfig({
       {
         extends: true,
         test: {
-          name: "node",
           environment: "node",
           include: ["tests/*.node.test.ts"],
+          name: "node",
         }
       },
       {
         extends: true,
         test: {
-          name: "browser",
           browser: {
             enabled: true,
-            provider: playwright(),
             instances: [
               {
                 browser: "chromium",
                 headless: true,
               }
             ],
+            provider: playwright(),
           },
           include: ["tests/*.browser.test.ts"],
+          name: "browser",
         }
       }
     ],

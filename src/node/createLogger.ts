@@ -1,15 +1,17 @@
 import pino from "pino";
-import { createNodeLoggerConfig, type CreateNodeLoggerConfigOptions } from "./createLoggerConfig.ts";
-import { createLoggerCloseHandler } from "./createLoggerCloseHandler.ts";
-import { createLoggerFlushHandler } from "./createLoggerFlushHandler.ts";
+
 import type { AppLogger } from "../createLogger.type.ts";
+
+import { createLoggerCloseHandler } from "./createLoggerCloseHandler.ts";
+import { createNodeLoggerConfig, type CreateNodeLoggerConfigOptions } from "./createLoggerConfig.ts";
+import { createLoggerFlushHandler } from "./createLoggerFlushHandler.ts";
 
 type CreateNodeLoggerOptions = CreateNodeLoggerConfigOptions;
 
 interface CreateNodeLoggerReturn {
-    instance: AppLogger;
     close: () => Promise<void>;
     flush: () => Promise<void>;
+    instance: AppLogger;
 }
 
 function createNodeLogger(options: CreateNodeLoggerOptions): CreateNodeLoggerReturn {
@@ -21,11 +23,11 @@ function createNodeLogger(options: CreateNodeLoggerOptions): CreateNodeLoggerRet
     const flush = createLoggerFlushHandler(stream);
 
     return {
-        instance: logger,
         close,
         flush,
+        instance: logger,
     };
 }
 
 export { createNodeLogger };
-export type { CreateNodeLoggerReturn, CreateNodeLoggerOptions };
+export type { CreateNodeLoggerOptions, CreateNodeLoggerReturn };

@@ -1,10 +1,12 @@
-import { createLoggerTransportTarget, type LoggerTransportTarget } from "./createLoggerTransportTarget.ts";
 import type ThreadStream from "thread-stream";
+
 import pino from "pino";
 
+import { createLoggerTransportTarget, type LoggerTransportTarget } from "./createLoggerTransportTarget.ts";
+
 interface CreateLoggerTransportOptions {
-    targets: LoggerTransportTarget[];
     deduplicateLogs?: boolean;
+    targets: LoggerTransportTarget[];
 }
 
 function createLoggerTransport(options?: CreateLoggerTransportOptions): ThreadStream | undefined {
@@ -13,8 +15,8 @@ function createLoggerTransport(options?: CreateLoggerTransportOptions): ThreadSt
     const targets = options.targets.map(createLoggerTransportTarget);
 
     return pino.transport({
-        targets,
         dedupe: options.deduplicateLogs ?? false,
+        targets,
     })
 }
 
