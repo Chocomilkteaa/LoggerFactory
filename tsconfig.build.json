@@ -1,0 +1,14 @@
+{
+    "extends": "@chocomilktea/config-store/tsconfig/node",
+    "compilerOptions": {
+        "rootDir": "src",
+        "outDir": "dist",
+        "noEmit": false,
+        "declaration": true,
+        "declarationMap": true,
+        "sourceMap": true,
+    },
+    "include": [
+        "src/**/*.ts",
+    ],
+}
