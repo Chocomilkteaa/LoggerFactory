@@ -15,6 +15,14 @@ type LoggerTransportTarget =
     }
     | {
         levelOverride?: LogLevel;
+        options: {
+            destination: string;
+        };
+        target: string;
+        type: "custom";
+    }
+    | {
+        levelOverride?: LogLevel;
         sync?: boolean;
         type: "pretty";
     }
@@ -34,6 +42,14 @@ function createLoggerTransportTarget(
     target: LoggerTransportTarget
 ): pino.TransportTargetOptions {
     switch (target.type) {
+        case "custom":
+            return {
+                level: target.levelOverride,
+                options: {
+                    destination: target.options.destination,
+                },
+                target: target.target,
+            };
         case "file":
             return {
                 level: target.levelOverride,
@@ -67,6 +83,7 @@ function createLoggerTransportTarget(
                 },
                 target: "pino/file",
             };
+        
         default:
             return assertNever(target);
     }

@@ -1,4 +1,5 @@
 import { mkdtemp, readFile, rm } from "fs/promises";
+import crypto from "node:crypto";
 import { tmpdir } from "os";
 import { join } from "path";
 import { afterEach, describe, expect, it } from "vitest";
@@ -56,7 +57,7 @@ describe("createNodeLogger", () => {
             const directory = await mkdtemp(join(tmpdir(), "app-logger-"));
             temporaryDirectories.push(directory);
 
-            return join(directory, `logs-${Date.now()}.log`);
+            return join(directory, `logs-${crypto.randomUUID()}.log`);
         }
 
         afterEach(async () => {
@@ -64,185 +65,243 @@ describe("createNodeLogger", () => {
             temporaryDirectories.length = 0;
         });
 
-        it("should redact sensitive fields in the log", async () => {
-            const destination = await createDestinationFilePath();
-            const logger = createNodeLogger({
-                redactPaths: ["password", "token", "nested.key"], transportOptions: {
-                    targets: [{
-                        options: {
-                            append: true,
-                            destination: destination,
-                            mkdir: true,
-                            sync: true,
-                        }, type: "file"
-                    }]
-                },
-            });
-            loggers.push(logger);
-
-            expect(logger.instance).toBeDefined();
-
-            logger.instance.info({ message: "Test log entry", nested: { key: "value" }, password: "secret", token: "abc123" });
-            await logger.flush();
-
-            const entries = await parseLog(destination);
-            expect(entries).toHaveLength(1);
-            expect(entries[0]).toMatchObject({ message: "Test log entry", nested: { key: "[REDACTED]" }, password: "[REDACTED]", token: "[REDACTED]" });
-        });
-
-        it("should filter output logs based on minimum log level", async () => {
-            const destination = await createDestinationFilePath();
-            const logger = createNodeLogger({
-                minLogLevel: "warn",
-                transportOptions: {
-                    targets: [{
-                        options: {
-                            append: true,
-                            destination: destination,
-                            mkdir: true,
-                            sync: true,
-                        }, type: "file"
-                    }]
-                },
-            });
-            loggers.push(logger);
-
-            expect(logger.instance).toBeDefined();
-
-            logger.instance.info({ message: "This should not be logged" });
-            logger.instance.warn({ message: "This should be logged" });
-            await logger.flush();
-
-            const entries = await parseLog(destination);
-            expect(entries).toHaveLength(1);
-            expect(entries[0]).toMatchObject({ message: "This should be logged" });
-        });
-
-        it("should create a logger with multiple transport targets", async () => {
-            const destination1 = await createDestinationFilePath();
-            const destination2 = await createDestinationFilePath();
-
-            const logger = createNodeLogger({
-                transportOptions: {
-                    targets: [
-                        {
+        describe("file", () => {
+            it("should log to target file", async () => {
+                const destination = await createDestinationFilePath();
+                const logger = createNodeLogger({
+                    transportOptions: {
+                        targets: [{
                             options: {
                                 append: true,
-                                destination: destination1,
+                                destination: destination,
                                 mkdir: true,
                                 sync: true,
                             }, type: "file"
-                        },
-                        {
+                        }]
+                    },
+                });
+                loggers.push(logger);
+
+                expect(logger.instance).toBeDefined();
+
+                logger.instance.info({ message: "Test log entry" });
+                await logger.flush();
+
+                const entries = await parseLog(destination);
+                expect(entries).toHaveLength(1);
+                expect(entries[0]).toMatchObject({ message: "Test log entry" });
+            });
+
+            it("should redact sensitive fields in the log", async () => {
+                const destination = await createDestinationFilePath();
+                const logger = createNodeLogger({
+                    redactPaths: ["password", "token", "nested.key"], transportOptions: {
+                        targets: [{
                             options: {
                                 append: true,
-                                destination: destination2,
+                                destination: destination,
                                 mkdir: true,
                                 sync: true,
                             }, type: "file"
-                        }
-                    ]
-                },
+                        }]
+                    },
+                });
+                loggers.push(logger);
+
+                expect(logger.instance).toBeDefined();
+
+                logger.instance.info({ message: "Test log entry", nested: { key: "value" }, password: "secret", token: "abc123" });
+                await logger.flush();
+
+                const entries = await parseLog(destination);
+                expect(entries).toHaveLength(1);
+                expect(entries[0]).toMatchObject({ message: "Test log entry", nested: { key: "[REDACTED]" }, password: "[REDACTED]", token: "[REDACTED]" });
             });
-            loggers.push(logger);
 
-            expect(logger.instance).toBeDefined();
-
-            logger.instance.info({ message: "This should be logged to both targets" });
-            await logger.flush();
-
-            const entries1 = await parseLog(destination1);
-            expect(entries1).toHaveLength(1);
-            expect(entries1[0]).toMatchObject({ message: "This should be logged to both targets" });
-            
-            const entries2 = await parseLog(destination2);
-            expect(entries2).toHaveLength(1);
-            expect(entries2[0]).toMatchObject({ message: "This should be logged to both targets" });
-        });
-
-        it("should filter output logs based on levelOverride for each transport target", async () => {
-            const destination1 = await createDestinationFilePath();
-            const destination2 = await createDestinationFilePath();
-
-            const logger = createNodeLogger({
-                transportOptions: {
-                    targets: [
-                        {
-                            levelOverride: "error", options: {
-                                append: true,
-                                destination: destination1,
-                                mkdir: true,
-                                sync: true,
-                            }, type: "file"
-                        },
-                        {
-                            levelOverride: "info", options: {
-                                append: true,
-                                destination: destination2,
-                                mkdir: true,
-                                sync: true,
-                            }, type: "file"
-                        }
-                    ]
-                },
-            });
-            loggers.push(logger);
-
-            expect(logger.instance).toBeDefined();
-
-            logger.instance.info({ message: "This should be logged to target 2 only" });
-            logger.instance.error({ message: "This should be logged to both targets" });
-            await logger.flush();
-
-            const entries1 = await parseLog(destination1);
-            expect(entries1).toHaveLength(1);
-            expect(entries1[0]).toMatchObject({ message: "This should be logged to both targets" });
-            
-            const entries2 = await parseLog(destination2);
-            expect(entries2).toHaveLength(2);
-            expect(entries2[0]).toMatchObject({ message: "This should be logged to target 2 only" });
-            expect(entries2[1]).toMatchObject({ message: "This should be logged to both targets" });
-        });
-
-        it("should deduplicate logs when deduplicateLogs is set to true", async () => {
-            const destination1 = await createDestinationFilePath();
-            const destination2 = await createDestinationFilePath();
-            const logger = createNodeLogger({
-                transportOptions: {
-                    deduplicateLogs: true,
-                    targets: [
-                        {
-                            levelOverride: "warn", options: {
-                                append: true,
-                                destination: destination1,
-                                mkdir: true,
-                                sync: true,
-                            }, type: "file"
-                        },
-                        {
+            it("should filter output logs based on minimum log level", async () => {
+                const destination = await createDestinationFilePath();
+                const logger = createNodeLogger({
+                    minLogLevel: "warn",
+                    transportOptions: {
+                        targets: [{
                             options: {
                                 append: true,
-                                destination: destination2,
+                                destination: destination,
                                 mkdir: true,
                                 sync: true,
                             }, type: "file"
-                        }
-                    ],
-                },
+                        }]
+                    },
+                });
+                loggers.push(logger);
+
+                expect(logger.instance).toBeDefined();
+
+                logger.instance.info({ message: "This should not be logged" });
+                logger.instance.warn({ message: "This should be logged" });
+                await logger.flush();
+
+                const entries = await parseLog(destination);
+                expect(entries).toHaveLength(1);
+                expect(entries[0]).toMatchObject({ message: "This should be logged" });
             });
-            loggers.push(logger);
 
-            expect(logger.instance).toBeDefined();
+            it("should create a logger with multiple transport targets", async () => {
+                const destination1 = await createDestinationFilePath();
+                const destination2 = await createDestinationFilePath();
 
-            logger.instance.warn({ message: "This should be logged only once" });
-            await logger.flush();
+                const logger = createNodeLogger({
+                    transportOptions: {
+                        targets: [
+                            {
+                                options: {
+                                    append: true,
+                                    destination: destination1,
+                                    mkdir: true,
+                                    sync: true,
+                                }, type: "file"
+                            },
+                            {
+                                options: {
+                                    append: true,
+                                    destination: destination2,
+                                    mkdir: true,
+                                    sync: true,
+                                }, type: "file"
+                            }
+                        ]
+                    },
+                });
+                loggers.push(logger);
 
-            const entries1 = await parseLog(destination1);
-            expect(entries1).toHaveLength(1);
-            expect(entries1[0]).toMatchObject({ message: "This should be logged only once" });
-            
-            const entries2 = await parseLog(destination2);
-            expect(entries2).toHaveLength(0);
+                expect(logger.instance).toBeDefined();
+
+                logger.instance.info({ message: "This should be logged to both targets" });
+                await logger.flush();
+
+                const entries1 = await parseLog(destination1);
+                expect(entries1).toHaveLength(1);
+                expect(entries1[0]).toMatchObject({ message: "This should be logged to both targets" });
+
+                const entries2 = await parseLog(destination2);
+                expect(entries2).toHaveLength(1);
+                expect(entries2[0]).toMatchObject({ message: "This should be logged to both targets" });
+            });
+
+            it("should filter output logs based on levelOverride for each transport target", async () => {
+                const destination1 = await createDestinationFilePath();
+                const destination2 = await createDestinationFilePath();
+
+                const logger = createNodeLogger({
+                    transportOptions: {
+                        targets: [
+                            {
+                                levelOverride: "error", options: {
+                                    append: true,
+                                    destination: destination1,
+                                    mkdir: true,
+                                    sync: true,
+                                }, type: "file"
+                            },
+                            {
+                                levelOverride: "info", options: {
+                                    append: true,
+                                    destination: destination2,
+                                    mkdir: true,
+                                    sync: true,
+                                }, type: "file"
+                            }
+                        ]
+                    },
+                });
+                loggers.push(logger);
+
+                expect(logger.instance).toBeDefined();
+
+                logger.instance.info({ message: "This should be logged to target 2 only" });
+                logger.instance.error({ message: "This should be logged to both targets" });
+                await logger.flush();
+
+                const entries1 = await parseLog(destination1);
+                expect(entries1).toHaveLength(1);
+                expect(entries1[0]).toMatchObject({ message: "This should be logged to both targets" });
+
+                const entries2 = await parseLog(destination2);
+                expect(entries2).toHaveLength(2);
+                expect(entries2[0]).toMatchObject({ message: "This should be logged to target 2 only" });
+                expect(entries2[1]).toMatchObject({ message: "This should be logged to both targets" });
+            });
+
+            it("should deduplicate logs when deduplicateLogs is set to true", async () => {
+                const destination1 = await createDestinationFilePath();
+                const destination2 = await createDestinationFilePath();
+                const logger = createNodeLogger({
+                    transportOptions: {
+                        deduplicateLogs: true,
+                        targets: [
+                            {
+                                levelOverride: "warn", options: {
+                                    append: true,
+                                    destination: destination1,
+                                    mkdir: true,
+                                    sync: true,
+                                }, type: "file"
+                            },
+                            {
+                                options: {
+                                    append: true,
+                                    destination: destination2,
+                                    mkdir: true,
+                                    sync: true,
+                                }, type: "file"
+                            }
+                        ],
+                    },
+                });
+                loggers.push(logger);
+
+                expect(logger.instance).toBeDefined();
+
+                logger.instance.warn({ message: "This should be logged only once" });
+                await logger.flush();
+
+                const entries1 = await parseLog(destination1);
+                expect(entries1).toHaveLength(1);
+                expect(entries1[0]).toMatchObject({ message: "This should be logged only once" });
+
+                const entries2 = await parseLog(destination2);
+                expect(entries2).toHaveLength(0);
+            });
+        });
+
+        describe("custom", () => {
+            it("should log to a custom transport target", async () => {
+                const destination = await createDestinationFilePath();
+                const logger = createNodeLogger({
+                    transportOptions: {
+                        targets: [
+                            {
+                                options: {
+                                    destination,
+                                },
+                                target: "./utils/customTransportTarget.ts",
+                                type: "custom",
+                            }
+                        ]
+                    }
+                });
+                loggers.push(logger);
+
+                expect(logger.instance).toBeDefined();
+
+                logger.instance.info({ message: "Test log entry for custom transport" });
+                await logger.flush();
+
+                const entries = await parseLog(destination);
+
+                expect(entries).toHaveLength(1);
+                expect(entries[0]).toMatchObject({ message: "Test log entry for custom transport"});
+            });
         });
     });
 });
