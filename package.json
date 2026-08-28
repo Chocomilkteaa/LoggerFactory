@@ -1,6 +1,9 @@
 {
     "name": "@chocomilktea/logger-factory",
     "version": "0.0.0",
+    "publishConfig": {
+        "access": "public"
+    },
     "type": "module",
     "engines": {
         "node": ">=24"
