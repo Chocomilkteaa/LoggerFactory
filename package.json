@@ -13,7 +13,7 @@
         "type:check": "tsc"
     },
     "devDependencies": {
-        "@chocomilktea/config-store": "0.0.1-dev.1",
+        "@chocomilktea/config-store": "0.0.1-dev.2",
         "@types/fast-redact": "^3.0.4",
         "@types/node": "^26.3.0",
         "@vitest/browser-playwright": "^4.1.11",

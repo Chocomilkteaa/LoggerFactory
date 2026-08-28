@@ -16,8 +16,8 @@ importers:
         version: 10.3.1
     devDependencies:
       '@chocomilktea/config-store':
-        specifier: 0.0.1-dev.1
-        version: 0.0.1-dev.1(eslint@10.9.1(jiti@2.7.0))(jiti@2.7.0)(prettier@3.9.6)(typescript@6.0.3)
+        specifier: 0.0.1-dev.2
+        version: 0.0.1-dev.2(@typescript-eslint/eslint-plugin@8.68.0(@typescript-eslint/parser@8.68.0(eslint@10.9.1(jiti@2.7.0))(typescript@6.0.3))(eslint@10.9.1(jiti@2.7.0))(typescript@6.0.3))(eslint@10.9.1(jiti@2.7.0))(jiti@2.7.0)(prettier@3.9.6)(typescript@6.0.3)(vitest@4.1.11)
       '@types/fast-redact':
         specifier: ^3.0.4
         version: 3.0.4
@@ -54,8 +54,8 @@ packages:
   '@blazediff/core@1.9.1':
     resolution: {integrity: sha512-ehg3jIkYKulZh+8om/O25vkvSsXXwC+skXmyA87FFx6A/45eqOkZsBltMw/TVteb0mloiGT8oGRTcjRAz66zaA==}
 
-  '@chocomilktea/config-store@0.0.1-dev.1':
-    resolution: {integrity: sha512-7WtjqCIGwFjp00I0kI/B38WGDVHgpuhx4JpRsHi8JwlYEZ30j3TyE0weNoVAmTHVdG0mVnQ264g8UDL+HWLtMg==}
+  '@chocomilktea/config-store@0.0.1-dev.2':
+    resolution: {integrity: sha512-Ms3HoDco+xZrJ8fySgItFSPEanI8DT93ZfFSROu8tPk7fR3j+02SuRupNQ0fkfld0KO72/ziw2VR4BhYLk1srQ==}
     engines: {node: '>=24'}
     peerDependencies:
       eslint: ^10.8.1
@@ -325,6 +325,22 @@ packages:
     resolution: {integrity: sha512-bwMovvAeuTFOK5kIFevw4VEf+1gVEICv4SYK4k3knJOxl6b1zEWud8mYKD73e1B0odAn174h1MofURy2TPWf3w==}
     peerDependencies:
       vitest: 4.1.11
+
+  '@vitest/eslint-plugin@1.6.27':
+    resolution: {integrity: sha512-X1RCAfwbatG4GFbJ/1PIHP9MSZMt0JJThqbYID+vS4L783k6QGlLPe421wQE8dHXuGCcenVLsydiM4qzsYWxhg==}
+    engines: {node: '>=18'}
+    peerDependencies:
+      '@typescript-eslint/eslint-plugin': '*'
+      eslint: '>=8.57.0'
+      typescript: '>=5.0.0'
+      vitest: '*'
+    peerDependenciesMeta:
+      '@typescript-eslint/eslint-plugin':
+        optional: true
+      typescript:
+        optional: true
+      vitest:
+        optional: true
 
   '@vitest/expect@4.1.11':
     resolution: {integrity: sha512-VX2x5vNJXET47KAFzwERI+KRMtTTCSWTfSMKsW7JsUsXV4psq++e3DvZpuTDOpHcxytiDs6p2nhVb2tVDiiUYw==}
@@ -1054,9 +1070,10 @@ snapshots:
 
   '@blazediff/core@1.9.1': {}
 
-  '@chocomilktea/config-store@0.0.1-dev.1(eslint@10.9.1(jiti@2.7.0))(jiti@2.7.0)(prettier@3.9.6)(typescript@6.0.3)':
+  '@chocomilktea/config-store@0.0.1-dev.2(@typescript-eslint/eslint-plugin@8.68.0(@typescript-eslint/parser@8.68.0(eslint@10.9.1(jiti@2.7.0))(typescript@6.0.3))(eslint@10.9.1(jiti@2.7.0))(typescript@6.0.3))(eslint@10.9.1(jiti@2.7.0))(jiti@2.7.0)(prettier@3.9.6)(typescript@6.0.3)(vitest@4.1.11)':
     dependencies:
       '@eslint/js': 10.0.1(eslint@10.9.1(jiti@2.7.0))
+      '@vitest/eslint-plugin': 1.6.27(@typescript-eslint/eslint-plugin@8.68.0(@typescript-eslint/parser@8.68.0(eslint@10.9.1(jiti@2.7.0))(typescript@6.0.3))(eslint@10.9.1(jiti@2.7.0))(typescript@6.0.3))(eslint@10.9.1(jiti@2.7.0))(typescript@6.0.3)(vitest@4.1.11)
       eslint: 10.9.1(jiti@2.7.0)
       eslint-config-prettier: 10.1.8(eslint@10.9.1(jiti@2.7.0))
       globals: 17.11.0
@@ -1065,8 +1082,10 @@ snapshots:
       prettier-plugin-packagejson: 3.0.2(prettier@3.9.6)
       typescript-eslint: 8.68.0(eslint@10.9.1(jiti@2.7.0))(typescript@6.0.3)
     transitivePeerDependencies:
+      - '@typescript-eslint/eslint-plugin'
       - supports-color
       - typescript
+      - vitest
 
   '@eslint-community/eslint-utils@4.10.1(eslint@10.9.1(jiti@2.7.0))':
     dependencies:
@@ -1314,6 +1333,18 @@ snapshots:
       - msw
       - utf-8-validate
       - vite
+
+  '@vitest/eslint-plugin@1.6.27(@typescript-eslint/eslint-plugin@8.68.0(@typescript-eslint/parser@8.68.0(eslint@10.9.1(jiti@2.7.0))(typescript@6.0.3))(eslint@10.9.1(jiti@2.7.0))(typescript@6.0.3))(eslint@10.9.1(jiti@2.7.0))(typescript@6.0.3)(vitest@4.1.11)':
+    dependencies:
+      '@typescript-eslint/scope-manager': 8.68.0
+      '@typescript-eslint/utils': 8.68.0(eslint@10.9.1(jiti@2.7.0))(typescript@6.0.3)
+      eslint: 10.9.1(jiti@2.7.0)
+    optionalDependencies:
+      '@typescript-eslint/eslint-plugin': 8.68.0(@typescript-eslint/parser@8.68.0(eslint@10.9.1(jiti@2.7.0))(typescript@6.0.3))(eslint@10.9.1(jiti@2.7.0))(typescript@6.0.3)
+      typescript: 6.0.3
+      vitest: 4.1.11(@types/node@26.3.0)(@vitest/browser-playwright@4.1.11)(vite@8.2.2(@types/node@26.3.0)(jiti@2.7.0))
+    transitivePeerDependencies:
+      - supports-color
 
   '@vitest/expect@4.1.11':
     dependencies:
