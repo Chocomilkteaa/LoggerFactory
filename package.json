@@ -9,6 +9,14 @@
         "node": ">=24"
     },
     "packageManager": "pnpm@11.18.0",
+    "exports": {
+        "./browser": "./src/browser/index.ts",
+        "./node": "./src/node/index.ts"
+    },
+    "files": [
+        "src/browser",
+        "src/node"
+    ],
     "scripts": {
         "lint:check": "eslint . --max-warnings=0",
         "lint:fix": "eslint . --fix",
