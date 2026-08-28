@@ -20,6 +20,9 @@
         "lint:check": "eslint . --max-warnings=0",
         "lint:fix": "eslint . --fix",
         "test": "vitest run --config vitest.config.ts",
+        "test:node:unit": "vitest run --config vitest.config.ts --project node:unit",
+        "test:node:integration": "vitest run --config vitest.config.ts --project node:integration",
+        "test:browser": "vitest run --config vitest.config.ts --project browser",
         "type:check": "tsc --noEmit",
         "build": "tsc -p tsconfig.build.json"
     },
