@@ -64,7 +64,7 @@ describe("createNodeLogger", () => {
             temporaryDirectories.length = 0;
         });
 
-        it("should create a logger with redaction paths", async () => {
+        it("should redact sensitive fields in the log", async () => {
             const destination = await createDestinationFilePath();
             const logger = createNodeLogger({
                 redactPaths: ["password", "token", "nested.key"], transportOptions: {
