@@ -14,8 +14,7 @@
         "./node": "./src/node/index.ts"
     },
     "files": [
-        "src/browser",
-        "src/node"
+        "src"
     ],
     "scripts": {
         "lint:check": "eslint . --max-warnings=0",
