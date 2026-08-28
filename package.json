@@ -10,17 +10,18 @@
     },
     "packageManager": "pnpm@11.18.0",
     "exports": {
-        "./browser": "./src/browser/index.ts",
-        "./node": "./src/node/index.ts"
+        "./browser": "./dist/browser/index.js",
+        "./node": "./dist/node/index.js"
     },
     "files": [
-        "src"
+        "dist"
     ],
     "scripts": {
         "lint:check": "eslint . --max-warnings=0",
         "lint:fix": "eslint . --fix",
         "test": "vitest run --config vitest.config.ts",
-        "type:check": "tsc"
+        "type:check": "tsc --noEmit",
+        "build": "tsc -p tsconfig.build.json"
     },
     "devDependencies": {
         "@chocomilktea/config-store": "0.0.1-dev.8",
