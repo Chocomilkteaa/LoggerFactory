@@ -1,3 +1,4 @@
-import config from "@chocomilktea/config-store/eslint/base";
+import baseConfig from "@chocomilktea/config-store/eslint/base";
+import testConfig from "@chocomilktea/config-store/eslint/test";
 
-export default config;
+export default [...baseConfig, ...testConfig];
