@@ -16,8 +16,8 @@ importers:
         version: 10.3.1
     devDependencies:
       '@chocomilktea/config-store':
-        specifier: 0.0.1-dev.2
-        version: 0.0.1-dev.2(@typescript-eslint/eslint-plugin@8.68.0(@typescript-eslint/parser@8.68.0(eslint@10.9.1(jiti@2.7.0))(typescript@6.0.3))(eslint@10.9.1(jiti@2.7.0))(typescript@6.0.3))(eslint@10.9.1(jiti@2.7.0))(jiti@2.7.0)(prettier@3.9.6)(typescript@6.0.3)(vitest@4.1.11)
+        specifier: 0.0.1-dev.8
+        version: 0.0.1-dev.8(@typescript-eslint/eslint-plugin@8.68.0(@typescript-eslint/parser@8.68.0(eslint@10.9.1(jiti@2.7.0))(typescript@6.0.3))(eslint@10.9.1(jiti@2.7.0))(typescript@6.0.3))(eslint@10.9.1(jiti@2.7.0))(jiti@2.7.0)(prettier@3.9.6)(typescript@6.0.3)(vitest@4.1.11)
       '@types/fast-redact':
         specifier: ^3.0.4
         version: 3.0.4
@@ -54,8 +54,8 @@ packages:
   '@blazediff/core@1.9.1':
     resolution: {integrity: sha512-ehg3jIkYKulZh+8om/O25vkvSsXXwC+skXmyA87FFx6A/45eqOkZsBltMw/TVteb0mloiGT8oGRTcjRAz66zaA==}
 
-  '@chocomilktea/config-store@0.0.1-dev.2':
-    resolution: {integrity: sha512-Ms3HoDco+xZrJ8fySgItFSPEanI8DT93ZfFSROu8tPk7fR3j+02SuRupNQ0fkfld0KO72/ziw2VR4BhYLk1srQ==}
+  '@chocomilktea/config-store@0.0.1-dev.8':
+    resolution: {integrity: sha512-1v9O3vhoZL9eZsyAc6jJw0BpXOfForU/ayqGEfkITPCKxfFJa+PKpm31aZwU/Fg7VNMntKs3ObrQwcGVEXDkcg==}
     engines: {node: '>=24'}
     peerDependencies:
       eslint: ^10.8.1
@@ -457,6 +457,12 @@ packages:
     peerDependencies:
       eslint: '>=7.0.0'
 
+  eslint-plugin-perfectionist@5.10.1:
+    resolution: {integrity: sha512-Kprsp9Us0GqAesYaAIzUViw57xYp5WBqzXrcE0Mtww++E5fexWXYBipMuuD7yvyH4vvpBH0+oJ+OMAmZ0oYXkw==}
+    engines: {node: ^20.0.0 || >=22.0.0}
+    peerDependencies:
+      eslint: ^8.45.0 || ^9.0.0 || ^10.0.0
+
   eslint-scope@9.1.2:
     resolution: {integrity: sha512-xS90H51cKw0jltxmvmHy2Iai1LIqrfbw57b79w/J7MfvDfkIkFZ+kj6zC3BjtUwh150HsSSdxXZcsuv72miDFQ==}
     engines: {node: ^20.19.0 || ^22.13.0 || >=24}
@@ -726,6 +732,10 @@ packages:
 
   natural-compare@1.4.0:
     resolution: {integrity: sha512-OWND8ei3VtNC9h7V60qff3SVobHr996CTwgxubgyQYEpg290h9J0buyECNNJexkFm5sOajh5G116RYA1c8ZMSw==}
+
+  natural-orderby@5.0.0:
+    resolution: {integrity: sha512-kKHJhxwpR/Okycz4HhQKKlhWe4ASEfPgkSWNmKFHd7+ezuQlxkA5cM3+XkBPvm1gmHen3w53qsYAv+8GwRrBlg==}
+    engines: {node: '>=18'}
 
   obug@2.1.4:
     resolution: {integrity: sha512-4a+OsYv9UktOJKE+l1A4OufDgdRF9PifWj+tJnHURo/P+WOxpG4GzUFL9qCalmWauao6ogiG+QvnCovwPoyAWA==}
@@ -1070,12 +1080,13 @@ snapshots:
 
   '@blazediff/core@1.9.1': {}
 
-  '@chocomilktea/config-store@0.0.1-dev.2(@typescript-eslint/eslint-plugin@8.68.0(@typescript-eslint/parser@8.68.0(eslint@10.9.1(jiti@2.7.0))(typescript@6.0.3))(eslint@10.9.1(jiti@2.7.0))(typescript@6.0.3))(eslint@10.9.1(jiti@2.7.0))(jiti@2.7.0)(prettier@3.9.6)(typescript@6.0.3)(vitest@4.1.11)':
+  '@chocomilktea/config-store@0.0.1-dev.8(@typescript-eslint/eslint-plugin@8.68.0(@typescript-eslint/parser@8.68.0(eslint@10.9.1(jiti@2.7.0))(typescript@6.0.3))(eslint@10.9.1(jiti@2.7.0))(typescript@6.0.3))(eslint@10.9.1(jiti@2.7.0))(jiti@2.7.0)(prettier@3.9.6)(typescript@6.0.3)(vitest@4.1.11)':
     dependencies:
       '@eslint/js': 10.0.1(eslint@10.9.1(jiti@2.7.0))
       '@vitest/eslint-plugin': 1.6.27(@typescript-eslint/eslint-plugin@8.68.0(@typescript-eslint/parser@8.68.0(eslint@10.9.1(jiti@2.7.0))(typescript@6.0.3))(eslint@10.9.1(jiti@2.7.0))(typescript@6.0.3))(eslint@10.9.1(jiti@2.7.0))(typescript@6.0.3)(vitest@4.1.11)
       eslint: 10.9.1(jiti@2.7.0)
       eslint-config-prettier: 10.1.8(eslint@10.9.1(jiti@2.7.0))
+      eslint-plugin-perfectionist: 5.10.1(eslint@10.9.1(jiti@2.7.0))(typescript@6.0.3)
       globals: 17.11.0
       jiti: 2.7.0
       prettier: 3.9.6
@@ -1448,6 +1459,15 @@ snapshots:
     dependencies:
       eslint: 10.9.1(jiti@2.7.0)
 
+  eslint-plugin-perfectionist@5.10.1(eslint@10.9.1(jiti@2.7.0))(typescript@6.0.3):
+    dependencies:
+      '@typescript-eslint/utils': 8.68.0(eslint@10.9.1(jiti@2.7.0))(typescript@6.0.3)
+      eslint: 10.9.1(jiti@2.7.0)
+      natural-orderby: 5.0.0
+    transitivePeerDependencies:
+      - supports-color
+      - typescript
+
   eslint-scope@9.1.2:
     dependencies:
       '@types/esrecurse': 4.3.1
@@ -1673,6 +1693,8 @@ snapshots:
   nanoid@3.3.18: {}
 
   natural-compare@1.4.0: {}
+
+  natural-orderby@5.0.0: {}
 
   obug@2.1.4: {}
 
