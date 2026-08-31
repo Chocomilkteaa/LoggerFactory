@@ -3,6 +3,9 @@ import { defineConfig } from "vitest/config";
 
 const config = defineConfig({
   test: {
+    onConsoleLog: () => {
+      return false;
+    },
     projects: [
       {
         extends: true,
@@ -32,6 +35,7 @@ const config = defineConfig({
               }
             ],
             provider: playwright(),
+
           },
           include: ["tests/*.browser.test.ts"],
           name: "browser",
