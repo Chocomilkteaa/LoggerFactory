@@ -1,6 +1,6 @@
 {
     "name": "@chocomilktea/logger-factory",
-    "version": "0.0.1-dev.4",
+    "version": "0.0.1-dev.5",
     "publishConfig": {
         "access": "public"
     },
