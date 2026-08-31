@@ -14,10 +14,13 @@ importers:
       pino:
         specifier: ^10.3.1
         version: 10.3.1
+      pino-abstract-transport:
+        specifier: ^3.0.0
+        version: 3.0.0
     devDependencies:
       '@chocomilktea/config-store':
-        specifier: 0.0.1-dev.10
-        version: 0.0.1-dev.10(@typescript-eslint/eslint-plugin@8.68.0(@typescript-eslint/parser@8.68.0(eslint@10.9.1(jiti@2.7.0))(typescript@6.0.3))(eslint@10.9.1(jiti@2.7.0))(typescript@6.0.3))(eslint@10.9.1(jiti@2.7.0))(jiti@2.7.0)(prettier@3.9.6)(typescript@6.0.3)(vitest@4.1.11)
+        specifier: 0.0.1-dev.12
+        version: 0.0.1-dev.12(@typescript-eslint/eslint-plugin@8.68.0(@typescript-eslint/parser@8.68.0(eslint@10.9.1(jiti@2.7.0))(typescript@6.0.3))(eslint@10.9.1(jiti@2.7.0))(typescript@6.0.3))(eslint@10.9.1(jiti@2.7.0))(jiti@2.7.0)(prettier@3.9.6)(typescript@6.0.3)(vitest@4.1.11)
       '@types/fast-redact':
         specifier: ^3.0.4
         version: 3.0.4
@@ -54,8 +57,8 @@ packages:
   '@blazediff/core@1.9.1':
     resolution: {integrity: sha512-ehg3jIkYKulZh+8om/O25vkvSsXXwC+skXmyA87FFx6A/45eqOkZsBltMw/TVteb0mloiGT8oGRTcjRAz66zaA==}
 
-  '@chocomilktea/config-store@0.0.1-dev.10':
-    resolution: {integrity: sha512-iE1d18QqB9veRTMUHaQU+dBAEQODj5Ip9KRjanmpMbO2SAjE0yHMljVyA61T000EW1K+Vi0VYGVlJL3riFcbvA==}
+  '@chocomilktea/config-store@0.0.1-dev.12':
+    resolution: {integrity: sha512-RjNgxbQfbuEnnNgqNHscEAGj5hZc2ZANeKnj94XBgRSJAU5Y3zvzPtUoSd6gdzpVMr7tm6X1pSgHSj4xrUwqlw==}
     engines: {node: '>=24'}
     peerDependencies:
       eslint: ^10.8.1
@@ -1080,7 +1083,7 @@ snapshots:
 
   '@blazediff/core@1.9.1': {}
 
-  '@chocomilktea/config-store@0.0.1-dev.10(@typescript-eslint/eslint-plugin@8.68.0(@typescript-eslint/parser@8.68.0(eslint@10.9.1(jiti@2.7.0))(typescript@6.0.3))(eslint@10.9.1(jiti@2.7.0))(typescript@6.0.3))(eslint@10.9.1(jiti@2.7.0))(jiti@2.7.0)(prettier@3.9.6)(typescript@6.0.3)(vitest@4.1.11)':
+  '@chocomilktea/config-store@0.0.1-dev.12(@typescript-eslint/eslint-plugin@8.68.0(@typescript-eslint/parser@8.68.0(eslint@10.9.1(jiti@2.7.0))(typescript@6.0.3))(eslint@10.9.1(jiti@2.7.0))(typescript@6.0.3))(eslint@10.9.1(jiti@2.7.0))(jiti@2.7.0)(prettier@3.9.6)(typescript@6.0.3)(vitest@4.1.11)':
     dependencies:
       '@eslint/js': 10.0.1(eslint@10.9.1(jiti@2.7.0))
       '@vitest/eslint-plugin': 1.6.27(@typescript-eslint/eslint-plugin@8.68.0(@typescript-eslint/parser@8.68.0(eslint@10.9.1(jiti@2.7.0))(typescript@6.0.3))(eslint@10.9.1(jiti@2.7.0))(typescript@6.0.3))(eslint@10.9.1(jiti@2.7.0))(typescript@6.0.3)(vitest@4.1.11)
