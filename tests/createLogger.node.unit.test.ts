@@ -1,9 +1,11 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
 
 import { createNodeLogger } from "../src/node/createLogger.ts";
+import { createCustomLoggerTransportTarget } from "../src/node/index.ts";
 
-const { mockCreateNodeLoggerConfig, mockPino } = vi.hoisted(() => {
+const { mockBuild, mockCreateNodeLoggerConfig, mockPino } = vi.hoisted(() => {
     return {
+        mockBuild: vi.fn(),
         mockCreateNodeLoggerConfig: vi.fn(),
         mockPino: vi.fn(),
     };
@@ -11,6 +13,10 @@ const { mockCreateNodeLoggerConfig, mockPino } = vi.hoisted(() => {
 
 vi.mock("pino", () => ({
     default: mockPino,
+}));
+
+vi.mock("pino-abstract-transport", () => ({
+    default: mockBuild,
 }));
 
 vi.mock("../src/node/createLoggerConfig.ts", () => ({
@@ -143,5 +149,104 @@ describe("createLogger", () => {
             expect(mockStream.flushSync).toHaveBeenCalledOnce();
             expect(mockStream.end).toHaveBeenCalledOnce();
         });
+    });
+});
+
+describe("createCustomLoggerTransportTarget", () => {
+    afterEach(() => {
+        vi.clearAllMocks();
+    });
+
+    it("should call onError when parse throws", async () => {
+        const error = new Error("parse failed");
+        const onError = vi.fn();
+        const parse = vi.fn(() => {
+            throw error;
+        });
+        const write = vi.fn();
+
+        createCustomLoggerTransportTarget({
+            onError,
+            options: {},
+            parse,
+            write,
+        });
+
+        const source = (async function* () {
+            await Promise.resolve();
+            yield "input";
+        })();
+
+        const [handler] = mockBuild.mock.calls[0];
+
+        await handler(source);
+
+        expect(onError).toHaveBeenCalledExactlyOnceWith(error, "input");
+        expect(parse).toHaveBeenCalledExactlyOnceWith("input");
+        expect(write).not.toHaveBeenCalled();
+    });
+
+    it("should call onError when write throws", async () => {
+        const error = new Error("write failed");
+        const onError = vi.fn();
+        const parse = vi.fn((input) => input);
+        const write = vi.fn(() => {
+            throw error;
+        });
+
+        createCustomLoggerTransportTarget({
+            onError,
+            options: {},
+            parse,
+            write,
+        });
+
+        const source = (async function* () {
+            await Promise.resolve();
+            yield "input";
+        })();
+
+        const [handler] = mockBuild.mock.calls[0];
+
+        await handler(source);
+
+        expect(onError).toHaveBeenCalledExactlyOnceWith(error, "input");
+        expect(parse).toHaveBeenCalledExactlyOnceWith("input");
+        expect(write).toHaveBeenCalledExactlyOnceWith("input");
+    });
+
+    it("should continue processing after an error", async () => {
+        const error = new Error("write failed");
+        const onError = vi.fn();
+        const parse = vi.fn((input) => input);
+        const write = vi.fn((input) => {
+            if (input === "bad") {
+                throw error;
+            }
+            return input;
+        });
+
+        createCustomLoggerTransportTarget({
+            onError,
+            options: {},
+            parse,
+            write,
+        });
+
+        const source = (async function* () {
+            await Promise.resolve();
+            yield "bad";
+            yield "good";
+        })();
+
+        const [handler] = mockBuild.mock.calls[0];
+
+        await handler(source);
+
+        expect(onError).toHaveBeenCalledExactlyOnceWith(error, "bad");
+        expect(parse).toHaveBeenNthCalledWith(1, "bad");
+        expect(write).toHaveBeenNthCalledWith(1, "bad");
+        expect(parse).toHaveBeenNthCalledWith(2, "good");
+        expect(write).toHaveBeenNthCalledWith(2, "good");
     });
 });
