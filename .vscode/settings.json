@@ -1,0 +1,11 @@
+{
+  "files.associations": {
+    "*.json": "jsonc"
+  },
+  "editor.formatOnSave": true,
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "prettier.configPath": "prettier.config.ts",
+  "editor.codeActionsOnSave": {
+    "source.fixAll.eslint": "always"
+  }
+}
