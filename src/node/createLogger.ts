@@ -11,26 +11,26 @@ type AppLogger = pino.Logger;
 type CreateNodeLoggerOptions = CreateNodeLoggerConfigOptions;
 
 interface CreateNodeLoggerReturn {
-    close: () => Promise<void>;
-    flush: () => Promise<void>;
-    instance: AppLogger;
-    transport: ThreadStream | undefined;
+  close: () => Promise<void>;
+  flush: () => Promise<void>;
+  instance: AppLogger;
+  transport: ThreadStream | undefined;
 }
 
 function createNodeLogger(options: CreateNodeLoggerOptions): CreateNodeLoggerReturn {
-    const { options: pinoOptions, stream } = createNodeLoggerConfig(options);
+  const { options: pinoOptions, stream } = createNodeLoggerConfig(options);
 
-    const logger = pino(pinoOptions, stream);
+  const logger = pino(pinoOptions, stream);
 
-    const close = createLoggerCloseHandler(stream);
-    const flush = createLoggerFlushHandler(stream);
+  const close = createLoggerCloseHandler(stream);
+  const flush = createLoggerFlushHandler(stream);
 
-    return {
-        close,
-        flush,
-        instance: logger,
-        transport: stream,
-    };
+  return {
+    close,
+    flush,
+    instance: logger,
+    transport: stream,
+  };
 }
 
 export { createNodeLogger };

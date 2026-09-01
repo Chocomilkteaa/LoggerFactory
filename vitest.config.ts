@@ -1,4 +1,4 @@
-import { playwright } from '@vitest/browser-playwright'
+import { playwright } from "@vitest/browser-playwright";
 import { defineConfig } from "vitest/config";
 
 const config = defineConfig({
@@ -13,7 +13,7 @@ const config = defineConfig({
           environment: "node",
           include: ["tests/*.node.unit.test.ts"],
           name: "node:unit",
-        }
+        },
       },
       {
         extends: true,
@@ -21,7 +21,7 @@ const config = defineConfig({
           environment: "node",
           include: ["tests/*.node.integration.test.ts"],
           name: "node:integration",
-        }
+        },
       },
       {
         extends: true,
@@ -32,15 +32,14 @@ const config = defineConfig({
               {
                 browser: "chromium",
                 headless: true,
-              }
+              },
             ],
             provider: playwright(),
-
           },
           include: ["tests/*.browser.test.ts"],
           name: "browser",
-        }
-      }
+        },
+      },
     ],
   },
 });

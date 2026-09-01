@@ -17,14 +17,12 @@ async function flushStream(stream: ThreadStream): Promise<void> {
   });
 }
 
-function createLoggerFlushHandler(
-    stream: ThreadStream | undefined,
-): () => Promise<void> {
-    return async (): Promise<void> => {
-        if (stream == null) return Promise.resolve();
+function createLoggerFlushHandler(stream: ThreadStream | undefined): () => Promise<void> {
+  return async (): Promise<void> => {
+    if (stream == null) return Promise.resolve();
 
-        return flushStream(stream);
-    };
+    return flushStream(stream);
+  };
 }
 
 export { createLoggerFlushHandler };

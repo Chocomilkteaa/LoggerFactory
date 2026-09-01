@@ -6,34 +6,33 @@ import type { CreateLoggerConfigOptions, CreateLoggerConfigReturn } from "../cre
 import { createLoggerTransport, type CreateLoggerTransportOptions } from "./createLoggerTransport.ts";
 
 interface CreateNodeLoggerConfigOptions extends CreateLoggerConfigOptions {
-    transportOptions?: CreateLoggerTransportOptions;
+  transportOptions?: CreateLoggerTransportOptions;
 }
 
 interface CreateNodeLoggerConfigReturn extends CreateLoggerConfigReturn {
-    stream?: ThreadStream;
+  stream?: ThreadStream;
 }
 
 function createNodeLoggerConfig(options: CreateNodeLoggerConfigOptions): CreateNodeLoggerConfigReturn {
-    const stream = createLoggerTransport(options.transportOptions);
+  const stream = createLoggerTransport(options.transportOptions);
 
-    const pinoOptions: pino.LoggerOptions = {
-        level: options.minLogLevel ?? "info",
-        name: options.name,
+  const pinoOptions: pino.LoggerOptions = {
+    level: options.minLogLevel ?? "info",
+    name: options.name,
+  };
+
+  if (options.redactPaths?.length) {
+    pinoOptions.redact = {
+      censor: "[REDACTED]",
+      paths: options.redactPaths,
     };
+  }
 
-    if (options.redactPaths?.length) {
-        pinoOptions.redact = {
-            censor: "[REDACTED]",
-            paths: options.redactPaths,
-        };
-    }
-
-    return {
-        options: pinoOptions,
-        stream,
-    };
+  return {
+    options: pinoOptions,
+    stream,
+  };
 }
-
 
 export { createNodeLoggerConfig };
 export type { CreateNodeLoggerConfigOptions, CreateNodeLoggerConfigReturn };
