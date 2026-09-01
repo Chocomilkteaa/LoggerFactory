@@ -17,10 +17,13 @@ importers:
       pino-abstract-transport:
         specifier: ^3.0.0
         version: 3.0.0
+      pino-pretty:
+        specifier: ^13.1.3
+        version: 13.1.3
     devDependencies:
       '@chocomilktea/config-store':
-        specifier: 0.0.1-dev.13
-        version: 0.0.1-dev.13(@typescript-eslint/eslint-plugin@8.68.0(@typescript-eslint/parser@8.68.0(eslint@10.9.1(jiti@2.7.0))(typescript@6.0.3))(eslint@10.9.1(jiti@2.7.0))(typescript@6.0.3))(eslint@10.9.1(jiti@2.7.0))(jiti@2.7.0)(prettier@3.9.6)(typescript@6.0.3)(vitest@4.1.11)
+        specifier: 0.0.1-dev.16
+        version: 0.0.1-dev.16(@typescript-eslint/eslint-plugin@8.68.0(@typescript-eslint/parser@8.68.0(eslint@10.9.1(jiti@2.7.0))(typescript@6.0.3))(eslint@10.9.1(jiti@2.7.0))(typescript@6.0.3))(eslint@10.9.1(jiti@2.7.0))(jiti@2.7.0)(prettier-plugin-packagejson@3.0.2(prettier@3.9.6))(prettier@3.9.6)(typescript@6.0.3)(vitest@4.1.11)
       '@types/fast-redact':
         specifier: ^3.0.4
         version: 3.0.4
@@ -36,15 +39,15 @@ importers:
       jiti:
         specifier: ^2.7.0
         version: 2.7.0
-      pino-pretty:
-        specifier: ^13.1.3
-        version: 13.1.3
       playwright:
         specifier: ^1.62.1
         version: 1.62.1
       prettier:
         specifier: ^3.9.6
         version: 3.9.6
+      prettier-plugin-packagejson:
+        specifier: ^3.0.2
+        version: 3.0.2(prettier@3.9.6)
       thread-stream:
         specifier: ^4.2.0
         version: 4.2.0
@@ -57,13 +60,14 @@ packages:
   '@blazediff/core@1.9.1':
     resolution: {integrity: sha512-ehg3jIkYKulZh+8om/O25vkvSsXXwC+skXmyA87FFx6A/45eqOkZsBltMw/TVteb0mloiGT8oGRTcjRAz66zaA==}
 
-  '@chocomilktea/config-store@0.0.1-dev.13':
-    resolution: {integrity: sha512-owLZrwv2eGyknEhOHQ/tdAtFziYIZHmH/4d+KM5wmakoLjcQADEfxjSrj7ZdFlP0Uo9w99bGs30LtUe5tsPpCQ==}
+  '@chocomilktea/config-store@0.0.1-dev.16':
+    resolution: {integrity: sha512-n7Zd4aGNaeqWQ3Nb0g5brg6lbWGaCHYgsqWFzNfKg104F8+mxk6qwlU5crvq7dUxbcdmWb3QVaobZaYIGq8YFg==}
     engines: {node: '>=24'}
     peerDependencies:
       eslint: ^10.8.1
       jiti: ^2.7.0
       prettier: ^3.9.6
+      prettier-plugin-packagejson: ^3.0.2
 
   '@eslint-community/eslint-utils@4.10.1':
     resolution: {integrity: sha512-cuadcxVFE8sDK6iWJbs8Sn0av2Nrh2QSGQhVlBW9AaAHqHwjWsZHT8LJ4hFGPh7ASBV2deFdM7H/DPjulmh8rg==}
@@ -1632,7 +1636,7 @@ snapshots:
 
   '@blazediff/core@1.9.1': {}
 
-  '@chocomilktea/config-store@0.0.1-dev.13(@typescript-eslint/eslint-plugin@8.68.0(@typescript-eslint/parser@8.68.0(eslint@10.9.1(jiti@2.7.0))(typescript@6.0.3))(eslint@10.9.1(jiti@2.7.0))(typescript@6.0.3))(eslint@10.9.1(jiti@2.7.0))(jiti@2.7.0)(prettier@3.9.6)(typescript@6.0.3)(vitest@4.1.11)':
+  '@chocomilktea/config-store@0.0.1-dev.16(@typescript-eslint/eslint-plugin@8.68.0(@typescript-eslint/parser@8.68.0(eslint@10.9.1(jiti@2.7.0))(typescript@6.0.3))(eslint@10.9.1(jiti@2.7.0))(typescript@6.0.3))(eslint@10.9.1(jiti@2.7.0))(jiti@2.7.0)(prettier-plugin-packagejson@3.0.2(prettier@3.9.6))(prettier@3.9.6)(typescript@6.0.3)(vitest@4.1.11)':
     dependencies:
       '@eslint-react/eslint-plugin': 5.18.6(eslint@10.9.1(jiti@2.7.0))(typescript@6.0.3)
       '@eslint/js': 10.0.1(eslint@10.9.1(jiti@2.7.0))
