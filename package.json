@@ -1,6 +1,6 @@
 {
   "name": "@chocomilktea/logger-factory",
-  "version": "0.0.1-dev.9",
+  "version": "0.0.1-dev.10",
   "type": "module",
   "exports": {
     "./browser": "./dist/browser/index.js",
