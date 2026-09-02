@@ -2,9 +2,8 @@ import { mkdtemp, readFile, rm } from "fs/promises";
 import crypto from "node:crypto";
 import { tmpdir } from "os";
 import { join } from "path";
-import { afterEach, describe, expect, it } from "vitest";
 
-import { createNodeLogger, type CreateNodeLoggerReturn } from "../src/node/createLogger.ts";
+import { createNodeLogger, type CreateNodeLoggerReturn } from "#src/node/createLogger";
 
 const loggers: CreateNodeLoggerReturn[] = [];
 

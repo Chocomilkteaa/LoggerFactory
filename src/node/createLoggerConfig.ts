@@ -1,7 +1,7 @@
 import type pino from "pino";
 import type ThreadStream from "thread-stream";
 
-import type { CreateLoggerConfigOptions, CreateLoggerConfigReturn } from "../createLogger.type.ts";
+import type { CreateLoggerConfigOptions, CreateLoggerConfigReturn } from "#src/createLogger.type";
 
 import { createLoggerTransport, type CreateLoggerTransportOptions } from "./createLoggerTransport.ts";
 

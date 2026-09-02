@@ -2,7 +2,7 @@ import type pino from "pino";
 
 import fastRedact from "fast-redact";
 
-import type { CreateLoggerConfigOptions, CreateLoggerConfigReturn } from "../createLogger.type.ts";
+import type { CreateLoggerConfigOptions, CreateLoggerConfigReturn } from "#src/createLogger.type";
 
 type CreateBrowserLoggerConfigOptions = CreateLoggerConfigOptions;
 type CreateBrowserLoggerConfigReturn = CreateLoggerConfigReturn;

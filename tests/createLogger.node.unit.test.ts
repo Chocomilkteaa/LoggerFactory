@@ -1,7 +1,5 @@
-import { afterEach, describe, expect, it, vi } from "vitest";
-
-import { createNodeLogger } from "../src/node/createLogger.ts";
-import { createCustomLoggerTransportTarget } from "../src/node/index.ts";
+import { createNodeLogger } from "#src/node/createLogger";
+import { createCustomLoggerTransportTarget } from "#src/node/index";
 
 const { mockBuild, mockCreateNodeLoggerConfig, mockPino } = vi.hoisted(() => {
   return {

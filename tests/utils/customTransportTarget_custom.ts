@@ -1,6 +1,6 @@
 import { appendFile } from "fs/promises";
 
-import { createCustomLoggerTransportTarget } from "../../src/node/createCustomLoggerTransportTarget.ts";
+import { createCustomLoggerTransportTarget } from "#src/node/createCustomLoggerTransportTarget";
 
 interface TestTransportOptions {
   destination: string;
