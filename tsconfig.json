@@ -1,7 +1,25 @@
 {
   "extends": "@chocomilktea/config-store/tsconfig/node",
   "compilerOptions": {
+    "types": [
+      "node",
+      "vitest/globals"
+    ],
+    "paths": {
+      "#src/*": [
+        "./src/*"
+      ],
+      "#tests/*": [
+        "./tests/*"
+      ]
+    },
     "rootDir": "."
   },
-  "include": ["src/**/*.ts", "eslint.config.ts", "prettier.config.ts", "vitest.config.ts", "tests/**/*.ts"]
+  "include": [
+    "src/**/*.ts",
+    "eslint.config.ts",
+    "prettier.config.ts",
+    "vitest.config.ts",
+    "tests/**/*.ts"
+  ]
 }
