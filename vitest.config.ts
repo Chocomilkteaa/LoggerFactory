@@ -3,6 +3,7 @@ import { defineConfig } from "vitest/config";
 
 const config = defineConfig({
   test: {
+    globals: true,
     onConsoleLog: () => {
       return false;
     },
@@ -31,6 +32,14 @@ const config = defineConfig({
             instances: [
               {
                 browser: "chromium",
+                headless: true,
+              },
+              {
+                browser: "firefox",
+                headless: true,
+              },
+              {
+                browser: "webkit",
                 headless: true,
               },
             ],
