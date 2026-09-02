@@ -1,4 +1,4 @@
-import baseConfig from "@chocomilktea/config-store/eslint/base";
-import testConfig from "@chocomilktea/config-store/eslint/test";
+import { createConfig as createNodeConfig } from "@chocomilktea/config-store/eslint/node";
+import { createConfig as createTestConfig } from "@chocomilktea/config-store/eslint/test";
 
-export default [...baseConfig, ...testConfig];
+export default [...createNodeConfig({}), ...createTestConfig({})];
