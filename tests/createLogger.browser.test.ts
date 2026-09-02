@@ -1,7 +1,4 @@
-import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import { cdp, type CDPSession } from "vitest/browser";
-
-import { createBrowserLogger } from "../src/browser/createLogger.ts";
+import { createBrowserLogger } from "#src/browser/createLogger";
 
 describe("createBrowserLogger", () => {
   describe("configuration", () => {
@@ -12,7 +9,7 @@ describe("createBrowserLogger", () => {
       expect(logger.level).toBe("warn");
     });
 
-    it('should create a logger with minimum log level being "debug" when not specified', () => {
+    it('should create a logger with minimum log level being "info" when not specified', () => {
       const logger = createBrowserLogger({});
 
       expect(logger).toBeDefined();
@@ -21,86 +18,56 @@ describe("createBrowserLogger", () => {
   });
 
   describe("logging", () => {
-    let session: CDPSession;
-    const logs: {
-      type: string;
-      values: unknown[];
-    }[] = [];
-
-    const logHandler = (payload: { args: { description?: string; objectId?: string; value?: unknown }[]; type: string }): void => {
-      void (async () => {
-        const values = await Promise.all(
-          payload.args.map(async (arg) => {
-            if (arg.objectId == null) return arg.value;
-
-            const { result } = await session.send("Runtime.getProperties", { objectId: arg.objectId, ownProperties: true });
-
-            return Object.fromEntries(result.map(({ name, value }) => [name, value?.value]));
-          }),
-        );
-        logs.push({
-          type: payload.type,
-          values,
-        });
-      })();
-    };
-
-    beforeEach(async () => {
-      session = cdp();
-      await session.send("Runtime.enable");
-      session.on("Runtime.consoleAPICalled", logHandler);
-    });
-
-    afterEach(async () => {
-      session.off("Runtime.consoleAPICalled", logHandler);
-      await session.send("Runtime.disable");
-      logs.length = 0;
+    afterEach(() => {
       vi.restoreAllMocks();
     });
 
-    it("should include name in the log", async () => {
+    it("should include name in the log", () => {
+      const logSpy = vi.spyOn(console, "info").mockImplementation(() => {
+        void 0;
+      });
+
       const logger = createBrowserLogger({ name: "test-logger" });
 
       logger.info("Test log with name");
 
-      await expect.poll(() => logs.length).toBeGreaterThan(0);
-
-      expect(logs).toContainEqual({
-        type: "info",
-        values: expect.arrayContaining([expect.objectContaining({ name: "test-logger" }), expect.stringContaining("Test log with name")]),
-      });
+      expect(logSpy).toHaveBeenCalledWith(
+        {
+          name: "test-logger",
+        },
+        "Test log with name",
+      );
     });
 
     it.each([
       ["trace", "trace"],
       ["debug", "debug"],
       ["info", "info"],
-      ["warn", "warning"],
+      ["warn", "warn"],
       ["error", "error"],
-    ] as const)("should write log with level %s to the console", async (level, consoleType) => {
+    ] as const)("should write log with level %s to the console", (level, consoleType) => {
+      const logSpy = vi.spyOn(console, consoleType).mockImplementation(() => {
+        void 0;
+      });
+
       const logger = createBrowserLogger({ minLogLevel: level });
 
       logger[level](`test ${level}`);
 
-      await expect.poll(() => logs.length).toBeGreaterThan(0);
-
-      expect(logs).toContainEqual({
-        type: consoleType,
-        values: expect.arrayContaining([expect.stringContaining(`test ${level}`)]),
-      });
+      expect(logSpy).toHaveBeenCalledWith(`test ${level}`);
     });
 
-    it("should redact sensitive fields in the log", async () => {
+    it("should redact sensitive fields in the log", () => {
+      const logSpy = vi.spyOn(console, "info").mockImplementation(() => {
+        void 0;
+      });
+
       const logger = createBrowserLogger({ redactPaths: ["password", "token", "nested.key"] });
-      logger.info({ message: "Test log entry", nested: { key: "value" }, password: "secret", token: "abc123" });
 
-      await expect.poll(() => logs.length).toBeGreaterThan(0);
+      logger.info({ nested: { key: "value" }, password: "secret", token: "abc123" }, "Test log entry");
 
-      const log = logs[0];
-
-      expect(log.type).toBe("info");
-      expect(JSON.parse(log.values[0] as string)).toMatchObject({
-        message: "Test log entry",
+      expect(JSON.parse(logSpy.mock.calls[0]?.[0])).toMatchObject({
+        msg: "Test log entry",
         nested: { key: "[REDACTED]" },
         password: "[REDACTED]",
         token: "[REDACTED]",
