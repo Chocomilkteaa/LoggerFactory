@@ -1,5 +1,5 @@
+import { createCustomLoggerTransportTarget } from "#src/node/createCustomLoggerTransportTarget";
 import { createNodeLogger } from "#src/node/createLogger";
-import { createCustomLoggerTransportTarget } from "#src/node/index";
 
 const { mockBuild, mockCreateNodeLoggerConfig, mockPino } = vi.hoisted(() => {
   return {
@@ -17,7 +17,7 @@ vi.mock("pino-abstract-transport", () => ({
   default: mockBuild,
 }));
 
-vi.mock("../src/node/createLoggerConfig.ts", () => ({
+vi.mock("#src/node/createLoggerConfig", () => ({
   createNodeLoggerConfig: mockCreateNodeLoggerConfig,
 }));
 
@@ -38,9 +38,10 @@ describe("createLogger", () => {
 
   describe("flushing", () => {
     it("should reject if flush callback has error", async () => {
+      const error = new Error("flush failed");
       const mockStream = createMockStream({
         flush: vi.fn((callback) => {
-          callback(new Error("flush failed"));
+          callback(error);
         }),
       });
 
@@ -50,13 +51,14 @@ describe("createLogger", () => {
       });
 
       const logger = createNodeLogger({});
-      await expect(logger.flush()).rejects.toThrow("Failed to flush stream: flush failed");
+      await expect(logger.flush()).rejects.toMatchObject({ cause: error, message: "Failed to flush stream" });
     });
 
     it("should reject if flush throws", async () => {
+      const error = new Error("flush failed");
       const mockStream = createMockStream({
         flush: vi.fn(() => {
-          throw new Error("flush failed");
+          throw error;
         }),
       });
 
@@ -66,7 +68,7 @@ describe("createLogger", () => {
       });
 
       const logger = createNodeLogger({});
-      await expect(logger.flush()).rejects.toThrow("Failed to flush stream: flush failed");
+      await expect(logger.flush()).rejects.toMatchObject({ cause: error, message: "Failed to flush stream" });
     });
   });
 
@@ -92,18 +94,20 @@ describe("createLogger", () => {
 
       expect(errorHandler).toBeDefined();
 
-      errorHandler?.(new Error("transport failed"));
+      const error = new Error("transport failed");
+      errorHandler?.(error);
 
-      await expect(closePromise).rejects.toThrow("Failed to close stream: transport failed");
+      await expect(closePromise).rejects.toMatchObject({ cause: error, message: "Failed to close stream" });
 
       expect(mockStream.flushSync).toHaveBeenCalledOnce();
       expect(mockStream.end).toHaveBeenCalledOnce();
     });
 
     it("should reject if flushSync throws", async () => {
+      const error = new Error("flush failed");
       const mockStream = createMockStream({
         flushSync: vi.fn(() => {
-          throw new Error("flush failed");
+          throw error;
         }),
       });
 
@@ -115,16 +119,17 @@ describe("createLogger", () => {
       const logger = createNodeLogger({});
       const closePromise = logger.close();
 
-      await expect(closePromise).rejects.toThrow("Failed to close stream: flush failed");
+      await expect(closePromise).rejects.toMatchObject({ cause: error, message: "Failed to close stream" });
 
       expect(mockStream.flushSync).toHaveBeenCalledOnce();
       expect(mockStream.end).not.toHaveBeenCalled();
     });
 
     it("should reject if end throws", async () => {
+      const error = new Error("end failed");
       const mockStream = createMockStream({
         end: vi.fn(() => {
-          throw new Error("end failed");
+          throw error;
         }),
       });
 
@@ -136,7 +141,7 @@ describe("createLogger", () => {
       const logger = createNodeLogger({});
       const closePromise = logger.close();
 
-      await expect(closePromise).rejects.toThrow("Failed to close stream: end failed");
+      await expect(closePromise).rejects.toMatchObject({ cause: error, message: "Failed to close stream" });
 
       expect(mockStream.flushSync).toHaveBeenCalledOnce();
       expect(mockStream.end).toHaveBeenCalledOnce();
@@ -169,7 +174,7 @@ describe("createCustomLoggerTransportTarget", () => {
       yield "input";
     })();
 
-    const [handler] = mockBuild.mock.calls[0];
+    const handler = mockBuild.mock.calls[0]?.[0];
 
     await handler(source);
 
@@ -198,7 +203,7 @@ describe("createCustomLoggerTransportTarget", () => {
       yield "input";
     })();
 
-    const [handler] = mockBuild.mock.calls[0];
+    const handler = mockBuild.mock.calls[0]?.[0];
 
     await handler(source);
 
@@ -231,7 +236,7 @@ describe("createCustomLoggerTransportTarget", () => {
       yield "good";
     })();
 
-    const [handler] = mockBuild.mock.calls[0];
+    const handler = mockBuild.mock.calls[0]?.[0];
 
     await handler(source);
 

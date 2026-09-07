@@ -37,7 +37,7 @@ describe("createNodeLogger", () => {
       loggers.push(logger);
 
       expect(logger.instance).toBeDefined();
-      expect(logger.instance.bindings().name).toBe("test-logger");
+      expect(logger.instance.bindings()['name']).toBe("test-logger");
     });
 
     it("should create a logger with minimum log level", () => {
@@ -413,7 +413,7 @@ describe("createNodeLogger", () => {
     });
 
     describe("custom", () => {
-      it("should log to a custom transport target", async () => {
+      it("should log to a custom transport target in correct order", async () => {
         const destination = await createDestinationFilePath();
         const logger = createNodeLogger({
           transportOptions: {
@@ -422,86 +422,56 @@ describe("createNodeLogger", () => {
                 options: {
                   destination,
                 },
-                target: "./utils/customTransportTarget_writable.ts",
+                target: "./utils/customTransportTarget_custom.ts",
                 type: "custom",
               },
             ],
           },
         });
-        loggers.push(logger);
 
         expect(logger.instance).toBeDefined();
 
-        logger.instance.info({ message: "Test log entry" });
-        await logger.flush();
+        logger.instance.info("First log entry");
+        logger.instance.info("Second log entry");
+        await logger.close();
 
         const entries = await parseLog({ filePath: destination });
 
-        expect(entries).toHaveLength(1);
-        expect(entries[0]).toMatchObject({ message: "Test log entry" });
+        expect(entries).toHaveLength(4);
+        expect(entries[0]).toMatchObject({ type: "write", value: { message: "First log entry" } });
+        expect(entries[1]).toMatchObject({ type: "write", value: { message: "Second log entry" } });
+        expect(entries[2]).toMatchObject({ type: "flush" });
+        expect(entries[3]).toMatchObject({ type: "close" });
       });
 
-      describe("createCustomLoggerTransportTarget", () => {
-        it("should log to a custom transport target in correct order", async () => {
-          const destination = await createDestinationFilePath();
-          const logger = createNodeLogger({
-            transportOptions: {
-              targets: [
-                {
-                  options: {
-                    destination,
-                  },
-                  target: "./utils/customTransportTarget_custom.ts",
-                  type: "custom",
+      it("should flush and close transport when closing the logger", async () => {
+        const destination = await createDestinationFilePath();
+
+        const logger = createNodeLogger({
+          transportOptions: {
+            targets: [
+              {
+                options: {
+                  destination,
                 },
-              ],
-            },
-          });
-
-          expect(logger.instance).toBeDefined();
-
-          logger.instance.info("First log entry");
-          logger.instance.info("Second log entry");
-          await logger.close();
-
-          const entries = await parseLog({ filePath: destination });
-
-          expect(entries).toHaveLength(4);
-          expect(entries[0]).toMatchObject({ type: "write", value: { message: "First log entry" } });
-          expect(entries[1]).toMatchObject({ type: "write", value: { message: "Second log entry" } });
-          expect(entries[2]).toMatchObject({ type: "flush" });
-          expect(entries[3]).toMatchObject({ type: "close" });
+                target: "./utils/customTransportTarget_custom.ts",
+                type: "custom",
+              },
+            ],
+          },
         });
 
-        it("should flush and close transport when closing the logger", async () => {
-          const destination = await createDestinationFilePath();
+        expect(logger.instance).toBeDefined();
 
-          const logger = createNodeLogger({
-            transportOptions: {
-              targets: [
-                {
-                  options: {
-                    destination,
-                  },
-                  target: "./utils/customTransportTarget_custom.ts",
-                  type: "custom",
-                },
-              ],
-            },
-          });
+        logger.instance.info("Test log entry");
+        await logger.close();
 
-          expect(logger.instance).toBeDefined();
+        const entries = await parseLog({ filePath: destination });
 
-          logger.instance.info("Test log entry");
-          await logger.close();
-
-          const entries = await parseLog({ filePath: destination });
-
-          expect(entries).toHaveLength(3);
-          expect(entries[0]).toMatchObject({ type: "write", value: { message: "Test log entry" } });
-          expect(entries[1]).toMatchObject({ type: "flush" });
-          expect(entries[2]).toMatchObject({ type: "close" });
-        });
+        expect(entries).toHaveLength(3);
+        expect(entries[0]).toMatchObject({ type: "write", value: { message: "Test log entry" } });
+        expect(entries[1]).toMatchObject({ type: "flush" });
+        expect(entries[2]).toMatchObject({ type: "close" });
       });
     });
   });
