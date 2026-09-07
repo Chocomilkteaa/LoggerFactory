@@ -19,7 +19,7 @@ async function closeStream(stream: ThreadStream): Promise<void> {
 
       settled = true;
       cleanup();
-      reject(new Error(`Failed to close stream: ${error instanceof Error ? error.message : JSON.stringify(error)}`));
+      reject(new Error(`Failed to close stream`, { cause: error }));
     };
 
     const onClose = (): void => {

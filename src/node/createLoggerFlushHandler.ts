@@ -5,14 +5,14 @@ async function flushStream(stream: ThreadStream): Promise<void> {
     try {
       stream.flush((error) => {
         if (error != null) {
-          reject(new Error(`Failed to flush stream: ${error.message}`));
+          reject(new Error(`Failed to flush stream`, { cause: error }));
           return;
         }
 
         resolve();
       });
     } catch (error) {
-      reject(new Error(`Failed to flush stream: ${error instanceof Error ? error.message : JSON.stringify(error)}`));
+      reject(new Error(`Failed to flush stream`, { cause: error }));
     }
   });
 }
