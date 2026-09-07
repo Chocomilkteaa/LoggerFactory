@@ -1,2 +1,2 @@
 minimumReleaseAgeExclude:
-  - '@chocomilktea/config-store@0.0.1-dev.17 || 0.0.1-dev.18 || 0.0.1-dev.29'
+  - "@chocomilktea/config-store@0.0.1-dev.30"
