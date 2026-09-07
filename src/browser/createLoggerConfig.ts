@@ -11,14 +11,14 @@ function redactionSerializer(paths: CreateBrowserLoggerConfigOptions["redactPath
   return fastRedact({ censor: "[REDACTED]", paths });
 }
 
-function createBrowserLoggerConfig(options: CreateBrowserLoggerConfigOptions): CreateBrowserLoggerConfigReturn {
+function createBrowserLoggerConfig({ minLogLevel = "info", name = 'Logger', redactPaths }: CreateBrowserLoggerConfigOptions): CreateBrowserLoggerConfigReturn {
   const pinoOptions: pino.LoggerOptions = {
-    level: options.minLogLevel ?? "info",
-    name: options.name,
+    level: minLogLevel,
+    name,
   };
 
-  if (options.redactPaths?.length) {
-    const redact = redactionSerializer(options.redactPaths);
+  if (redactPaths?.length) {
+    const redact = redactionSerializer(redactPaths);
     pinoOptions.browser = {
       ...pinoOptions.browser,
       write: {
