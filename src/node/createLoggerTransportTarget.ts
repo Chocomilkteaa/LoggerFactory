@@ -40,17 +40,21 @@ function assertNever(value: never): never {
 
 function createLoggerTransportTarget(target: LoggerTransportTarget): pino.TransportTargetOptions {
   switch (target.type) {
-    case "custom":
-      return {
-        level: target.levelOverride,
+    case "custom": {
+      const targetOptions: pino.TransportTargetOptions = {
         options: {
           destination: target.options.destination,
         },
         target: target.target,
       };
-    case "file":
-      return {
-        level: target.levelOverride,
+      if (target.levelOverride) {
+        targetOptions.level = target.levelOverride;
+      }
+
+      return targetOptions;
+    }
+    case "file": {
+      const targetOptions: pino.TransportTargetOptions = {
         options: {
           append: target.options.append,
           colorize: false,
@@ -60,9 +64,15 @@ function createLoggerTransportTarget(target: LoggerTransportTarget): pino.Transp
         },
         target: "pino/file",
       };
-    case "pretty":
-      return {
-        level: target.levelOverride,
+      if (target.levelOverride) {
+        targetOptions.level = target.levelOverride;
+      }
+
+      return targetOptions;
+    }
+
+    case "pretty": {
+      const targetOptions: pino.TransportTargetOptions = {
         options: {
           colorize: true,
           destination: STDOUT_FILE_DESCRIPTOR,
@@ -72,9 +82,14 @@ function createLoggerTransportTarget(target: LoggerTransportTarget): pino.Transp
         },
         target: "pino-pretty",
       };
-    case "stdout":
-      return {
-        level: target.levelOverride,
+      if (target.levelOverride) {
+        targetOptions.level = target.levelOverride;
+      }
+
+      return targetOptions;
+    }
+    case "stdout": {
+      const targetOptions: pino.TransportTargetOptions = {
         options: {
           colorize: true,
           destination: STDOUT_FILE_DESCRIPTOR,
@@ -82,6 +97,12 @@ function createLoggerTransportTarget(target: LoggerTransportTarget): pino.Transp
         },
         target: "pino/file",
       };
+      if (target.levelOverride) {
+        targetOptions.level = target.levelOverride;
+      }
+
+      return targetOptions;
+    }
 
     default:
       return assertNever(target);
