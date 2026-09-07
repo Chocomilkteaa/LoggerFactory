@@ -11,7 +11,11 @@ function redactionSerializer(paths: CreateBrowserLoggerConfigOptions["redactPath
   return fastRedact({ censor: "[REDACTED]", paths });
 }
 
-function createBrowserLoggerConfig({ minLogLevel = "info", name = 'Logger', redactPaths }: CreateBrowserLoggerConfigOptions): CreateBrowserLoggerConfigReturn {
+function createBrowserLoggerConfig({
+  minLogLevel = "info",
+  name = "Logger",
+  redactPaths,
+}: CreateBrowserLoggerConfigOptions): CreateBrowserLoggerConfigReturn {
   const pinoOptions: pino.LoggerOptions = {
     level: minLogLevel,
     name,

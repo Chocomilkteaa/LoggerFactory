@@ -4,33 +4,33 @@ type LogLevel = pino.LevelWithSilent;
 
 type LoggerTransportTarget =
   | {
-    levelOverride?: LogLevel;
-    options: {
-      append: boolean;
-      destination: string;
-      mkdir: boolean;
+      levelOverride?: LogLevel;
+      options: {
+        append: boolean;
+        destination: string;
+        mkdir: boolean;
+        sync?: boolean;
+      };
+      type: "file";
+    }
+  | {
+      levelOverride?: LogLevel;
+      options: {
+        destination: string;
+      };
+      target: string;
+      type: "custom";
+    }
+  | {
+      levelOverride?: LogLevel;
       sync?: boolean;
+      type: "pretty";
+    }
+  | {
+      levelOverride?: LogLevel;
+      sync?: boolean;
+      type: "stdout";
     };
-    type: "file";
-  }
-  | {
-    levelOverride?: LogLevel;
-    options: {
-      destination: string;
-    };
-    target: string;
-    type: "custom";
-  }
-  | {
-    levelOverride?: LogLevel;
-    sync?: boolean;
-    type: "pretty";
-  }
-  | {
-    levelOverride?: LogLevel;
-    sync?: boolean;
-    type: "stdout";
-  };
 
 const STDOUT_FILE_DESCRIPTOR = 1;
 

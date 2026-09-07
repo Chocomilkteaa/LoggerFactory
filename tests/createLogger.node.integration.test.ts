@@ -37,7 +37,7 @@ describe("createNodeLogger", () => {
       loggers.push(logger);
 
       expect(logger.instance).toBeDefined();
-      expect(logger.instance.bindings()['name']).toBe("test-logger");
+      expect(logger.instance.bindings()["name"]).toBe("test-logger");
     });
 
     it("should create a logger with minimum log level", () => {

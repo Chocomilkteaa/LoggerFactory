@@ -13,7 +13,12 @@ interface CreateNodeLoggerConfigReturn extends CreateLoggerConfigReturn {
   stream: ThreadStream | undefined;
 }
 
-function createNodeLoggerConfig({ minLogLevel = "info", name = "Logger", redactPaths, transportOptions }: CreateNodeLoggerConfigOptions): CreateNodeLoggerConfigReturn {
+function createNodeLoggerConfig({
+  minLogLevel = "info",
+  name = "Logger",
+  redactPaths,
+  transportOptions,
+}: CreateNodeLoggerConfigOptions): CreateNodeLoggerConfigReturn {
   const stream = createLoggerTransport(transportOptions);
 
   const pinoOptions: pino.LoggerOptions = {
