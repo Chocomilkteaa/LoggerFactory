@@ -10,21 +10,21 @@ interface CreateNodeLoggerConfigOptions extends CreateLoggerConfigOptions {
 }
 
 interface CreateNodeLoggerConfigReturn extends CreateLoggerConfigReturn {
-  stream?: ThreadStream;
+  stream: ThreadStream | undefined;
 }
 
-function createNodeLoggerConfig(options: CreateNodeLoggerConfigOptions): CreateNodeLoggerConfigReturn {
-  const stream = createLoggerTransport(options.transportOptions);
+function createNodeLoggerConfig({ minLogLevel = "info", name = "Logger", redactPaths, transportOptions }: CreateNodeLoggerConfigOptions): CreateNodeLoggerConfigReturn {
+  const stream = createLoggerTransport(transportOptions);
 
   const pinoOptions: pino.LoggerOptions = {
-    level: options.minLogLevel ?? "info",
-    name: options.name,
+    level: minLogLevel,
+    name,
   };
 
-  if (options.redactPaths?.length) {
+  if (redactPaths?.length) {
     pinoOptions.redact = {
       censor: "[REDACTED]",
-      paths: options.redactPaths,
+      paths: redactPaths,
     };
   }
 
